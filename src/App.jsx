@@ -3,7 +3,7 @@ import './index.css'; // We'll use index.css for global styles
 
 function App() {
   const [puter, setPuter] = useState(null);
-
+  
   // Example 1: Basic Text Generation
   const [basicPrompt, setBasicPrompt] = useState("Explain quantum computing in simple terms");
   const [basicModel, setBasicModel] = useState('claude-sonnet-4');
@@ -17,7 +17,7 @@ function App() {
   const [isStreamingLoading, setIsStreamingLoading] = useState(false);
 
   // Example 3: Model Comparison (Simplified)
-  const [poemPrompt, setPoemPrompt] = useState("Write a short poem about coding");
+  const [poemPrompt, setPoemPrompt] = useState("Writen a short poem about coding");
   const [sonnetPoem, setSonnetPoem] = useState('');
   const [opusPoem, setOpusPoem] = useState('');
   const [isPoemLoading, setIsPoemLoading] = useState(false);
