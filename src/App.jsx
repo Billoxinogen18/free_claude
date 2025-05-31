@@ -4,18 +4,21 @@ import './index.css';
 
 const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
 
+// Updated model groups based on your provided snippet
 const modelGroups = [
   {
     label: "Claude",
     models: [
       { value: 'claude-sonnet-4', label: 'Claude Sonnet 4' },
       { value: 'claude-opus-4', label: 'Claude Opus 4' },
+      { value: 'claude-3-5-sonnet', label: 'Claude 3.5 Sonnet' }, // Added
     ]
   },
   {
     label: "OpenAI",
     models: [
       { value: 'gpt-4o', label: 'GPT-4o' },
+      { value: 'gpt-4o-mini', label: 'GPT-4o Mini' }, // Added
       { value: 'gpt-4.1', label: 'GPT-4.1' },
       { value: 'gpt-4.5-preview', label: 'GPT-4.5 Preview' },
       { value: 'o1', label: 'OpenAI o1' },
@@ -27,21 +30,22 @@ const modelGroups = [
   {
     label: "Grok",
     models: [
-      { value: 'x-ai/grok-3-beta', label: 'Grok 3 Beta' },
+      // Note: Using 'grok-beta' as per your snippet. Original Puter.js docs showed 'x-ai/grok-3-beta'.
+      // Ensure 'grok-beta' is the correct identifier if issues arise.
+      { value: 'grok-beta', label: 'Grok Beta' }, 
     ]
   },
   {
     label: "Gemini",
     models: [
-      { value: 'google/gemini-2.5-pro-exp-03-25:free', label: 'Gemini 2.5 Pro' },
-      { value: 'google/gemini-pro', label: 'Gemini Pro'},
+      // Using simplified names as per your snippet.
+      { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
       { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
-      { value: 'google/gemini-flash-1.5-8b', label: 'Gemini Flash 1.5 8B'},
-      { value: 'google/gemini-2.0-flash-lite-001', label: 'Gemini 2.0 Flash Lite' },
     ]
   }
 ];
 
+// Simple Markdown to HTML (bold, italic, inline code)
 const SimpleMarkdown = ({ text }) => {
   if (!text) return null;
   const html = text
@@ -54,7 +58,7 @@ const SimpleMarkdown = ({ text }) => {
 function App() {
   const [puter, setPuter] = useState(null);
   const [currentPrompt, setCurrentPrompt] = useState('');
-  const [selectedModel, setSelectedModel] = useState(modelGroups[0].models[0].value);
+  const [selectedModel, setSelectedModel] = useState(modelGroups[0].models[0].value); // Default to first model in the list
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false); 
   const [isAiThinking, setIsAiThinking] = useState(false); 
@@ -64,7 +68,7 @@ function App() {
   const chatEndRef = useRef(null);
   const textareaRef = useRef(null);
   const chatAreaRef = useRef(null);
-  const headerRef = useRef(null); // Ref for the header
+  const headerRef = useRef(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('cool-chat-theme');
@@ -93,18 +97,16 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (chatEndRef.current && !showScrollToBottom) { // Only auto-scroll if user hasn't scrolled up
+    if (chatEndRef.current && !showScrollToBottom) {
         chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, isAiThinking, showScrollToBottom]); // Add showScrollToBottom to dependencies
+  }, [messages, isAiThinking, showScrollToBottom]);
 
   useEffect(() => {
-    // Update --header-height CSS variable when headerRef is available or dark mode changes
     if (headerRef.current) {
       const headerHeight = headerRef.current.offsetHeight;
       document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
     }
-    // Add a ResizeObserver to update header height on window resize if header content can wrap
     const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
             if (entry.target === headerRef.current) {
@@ -113,21 +115,21 @@ function App() {
             }
         }
     });
-    if(headerRef.current) {
-        resizeObserver.observe(headerRef.current);
+    const currentHeaderRef = headerRef.current; // Capture value for cleanup
+    if(currentHeaderRef) {
+        resizeObserver.observe(currentHeaderRef);
     }
     return () => {
-        if(headerRef.current) {
-            resizeObserver.unobserve(headerRef.current);
+        if(currentHeaderRef) {
+            resizeObserver.unobserve(currentHeaderRef);
         }
     }
-
-  }, [isDarkMode, headerRef.current]); // Rerun when dark mode changes or headerRef itself changes
+  }, [isDarkMode, headerRef]); // Removed headerRef.current from dep array, added headerRef
 
   const handleChatScroll = () => {
     if (chatAreaRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatAreaRef.current;
-      const threshold = clientHeight / 2; // Show button if scrolled up more than half a viewport
+      const threshold = clientHeight / 2; 
       setShowScrollToBottom(scrollHeight - scrollTop - clientHeight > threshold);
     }
   };
@@ -140,6 +142,7 @@ function App() {
 
   const toggleTheme = () => setIsDarkMode(prev => !prev);
 
+  // Using your updated handleSendMessage (streaming)
   const handleSendMessage = async (e) => {
     if (e) e.preventDefault(); 
     if (!puter || !currentPrompt.trim() || isLoading || isAiThinking) return;
@@ -157,7 +160,11 @@ function App() {
     setMessages(prev => [...prev, { id: aiMessageId, text: '', sender: 'ai', streaming: true, modelUsed: selectedModel, timestamp: new Date() }]);
     
     try {
-      const responseStream = await puter.ai.chat(promptForAi, { model: selectedModel, stream: true });
+      const responseStream = await puter.ai.chat(promptForAi, { 
+        model: selectedModel, 
+        stream: true 
+      });
+      
       setIsAiThinking(false); 
 
       let fullResponse = '';
@@ -166,27 +173,126 @@ function App() {
       let lastRenderTime = 0;
 
       for await (const part of responseStream) {
-        buffer += part?.text || '';
+        // Better handling of the response structure from your snippet
+        const textContent = part?.text || part?.content || '';
+        buffer += textContent;
+        
         const currentTime = Date.now();
-        // Render if buffer has content and interval passed, or if it's a newline (for faster paragraph breaks)
-        if (buffer && (currentTime - lastRenderTime > RENDER_INTERVAL || (part?.text || '').includes('\n'))) {
+        if (buffer && (currentTime - lastRenderTime > RENDER_INTERVAL || textContent.includes('\n'))) {
           fullResponse += buffer;
           buffer = '';
-          setMessages(prev => prev.map(msg => msg.id === aiMessageId ? { ...msg, text: fullResponse, streaming: true } : msg));
+          setMessages(prev => prev.map(msg => 
+            msg.id === aiMessageId 
+              ? { ...msg, text: fullResponse, streaming: true } 
+              : msg
+          ));
           lastRenderTime = currentTime;
         }
       }
-      if (buffer) { // Append any remaining buffer content
+      
+      if (buffer) {
         fullResponse += buffer;
-        setMessages(prev => prev.map(msg => msg.id === aiMessageId ? { ...msg, text: fullResponse, streaming: true } : msg));
+        setMessages(prev => prev.map(msg => 
+          msg.id === aiMessageId 
+            ? { ...msg, text: fullResponse, streaming: true } 
+            : msg
+        ));
       }
       
-      setMessages(prev => prev.map(msg => msg.id === aiMessageId ? { ...msg, streaming: false } : msg));
+      setMessages(prev => prev.map(msg => 
+        msg.id === aiMessageId 
+          ? { ...msg, streaming: false } 
+          : msg
+      ));
 
     } catch (error) {
       console.error(`Error with model ${selectedModel}:`, error);
       setIsAiThinking(false);
-      setMessages(prev => prev.map(msg => msg.id === aiMessageId ? { ...msg, text: `Error with ${selectedModel}: ${error.message}`, streaming: false, error: true } : msg));
+      
+      // Better error message handling from your snippet
+      let errorMessage = `Error with ${selectedModel}: `;
+      if (error.message) {
+        errorMessage += error.message;
+      } else if (typeof error === 'string') {
+        errorMessage += error;
+      } else {
+        errorMessage += 'Unknown error occurred';
+      }
+      
+      // Check if it's a model availability issue from your snippet
+      if (errorMessage.includes('undefined') || errorMessage.includes('not found') || errorMessage.includes('400')) {
+        errorMessage += '. This model might be unavailable or misconfigured. Try gpt-4o-mini or claude-3.5-sonnet.';
+      }
+      
+      setMessages(prev => prev.map(msg => 
+        msg.id === aiMessageId 
+          ? { ...msg, text: errorMessage, streaming: false, error: true } 
+          : msg
+      ));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Included your non-streaming version for potential testing/debugging
+  // To use it, you could temporarily call it in the form's onSubmit instead of handleSendMessage
+  // eslint-disable-next-line no-unused-vars
+  const handleSendMessageNonStream = async (e) => {
+    if (e) e.preventDefault(); 
+    if (!puter || !currentPrompt.trim() || isLoading || isAiThinking) return;
+
+    const userMessage = { id: generateId(), text: currentPrompt, sender: 'user', timestamp: new Date() };
+    setMessages(prev => [...prev, userMessage]);
+    const promptForAi = currentPrompt;
+    setCurrentPrompt('');
+    
+    setIsLoading(true);
+    setIsAiThinking(true);
+
+    const aiMessageId = generateId();
+    setMessages(prev => [...prev, { id: aiMessageId, text: '', sender: 'ai', streaming: false, modelUsed: selectedModel, timestamp: new Date() }]);
+    
+    try {
+      const response = await puter.ai.chat(promptForAi, { 
+        model: selectedModel, 
+        stream: false 
+      });
+      
+      setIsAiThinking(false);
+      
+      let responseText = '';
+      if (typeof response === 'string') {
+        responseText = response;
+      } else if (response?.message?.content) {
+        responseText = response.message.content;
+      } else if (response?.text) {
+        responseText = response.text;
+      } else {
+        responseText = 'Received response but could not extract text content.';
+      }
+      
+      setMessages(prev => prev.map(msg => 
+        msg.id === aiMessageId 
+          ? { ...msg, text: responseText, streaming: false } 
+          : msg
+      ));
+
+    } catch (error) {
+      console.error(`Error with model ${selectedModel}:`, error);
+      setIsAiThinking(false);
+      
+      let errorMessage = `Error with ${selectedModel}: `;
+      if (error.message) {
+        errorMessage += error.message;
+      } else {
+        errorMessage += 'Unknown error occurred';
+      }
+      
+      setMessages(prev => prev.map(msg => 
+        msg.id === aiMessageId 
+          ? { ...msg, text: errorMessage, streaming: false, error: true } 
+          : msg
+      ));
     } finally {
       setIsLoading(false);
     }
@@ -198,21 +304,21 @@ function App() {
 
   const autoResizeTextarea = () => {
     if (textareaRef.current) {
-      const maxHeight = 150; // Max height in pixels, should match CSS
-      textareaRef.current.style.height = 'auto'; // Temporarily shrink to get scrollHeight
+      const maxHeight = 150; 
+      textareaRef.current.style.height = 'auto'; 
       const scrollHeight = textareaRef.current.scrollHeight;
       textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
       textareaRef.current.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
   };
   
-  useEffect(autoResizeTextarea, [currentPrompt]); // Auto-resize when prompt changes
+  useEffect(autoResizeTextarea, [currentPrompt]);
 
   const clearChat = () => setMessages([]);
   
   const scrollToBottom = () => {
      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-     setShowScrollToBottom(false); // Hide button after clicking
+     setShowScrollToBottom(false); 
   };
 
   if (!puter && !isLoading && !isAiThinking) {
@@ -225,7 +331,7 @@ function App() {
 
   return (
     <div className="app-container cool-chat-theme">
-      <header className="app-header" ref={headerRef}> {/* Added ref={headerRef} here */}
+      <header className="app-header" ref={headerRef}>
         <div className="header-title-area"><h1>Cool Chat</h1></div>
         <div className="header-controls-area">
           <div className="model-selector-wrapper">
@@ -261,7 +367,7 @@ function App() {
         </div>
       </header>
 
-      <main className="chat-area" ref={chatAreaRef}> {/* Added ref={chatAreaRef} here */}
+      <main className="chat-area" ref={chatAreaRef}>
         <div className="message-list">
           {messages.map(msg => (
             <div key={msg.id} className={`message-wrapper ${msg.sender === 'user' ? 'user-wrapper' : 'ai-wrapper'}`}>
@@ -290,13 +396,14 @@ function App() {
           )}
           <div ref={chatEndRef} />
         </div>
-        {showScrollToBottom && ( // Scroll to bottom button JSX
+        {showScrollToBottom && (
           <button 
             onClick={scrollToBottom} 
             className={`scroll-to-bottom-button neumorphic-element ${showScrollToBottom ? 'visible' : ''}`} 
             aria-label="Scroll to bottom"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            {/* Updated SVG icon for scroll to bottom */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 17.27L18.18 11.09L16.77 9.68L12 14.45L7.23 9.68L5.82 11.09L12 17.27ZM12 4C11.74 4 11.5 4.1 11.32 4.23L3.5 9.87C3.18 10.09 3 10.47 3 10.87V11C3 11.55 3.45 12 4 12H20C20.55 12 21 11.55 21 11V10.87C21 10.47 20.82 10.09 20.5 9.87L12.68 4.23C12.5 4.1 12.26 4 12 4Z"/></svg>
           </button>
         )}
       </main>
@@ -307,7 +414,7 @@ function App() {
             ref={textareaRef} 
             className="chat-input" 
             value={currentPrompt}
-            onChange={(e) => { setCurrentPrompt(e.target.value); /* autoResizeTextarea() called in useEffect */; }}
+            onChange={(e) => { setCurrentPrompt(e.target.value); /* autoResizeTextarea called by useEffect */}}
             placeholder="Message Cool Chat..." 
             rows="1" 
             disabled={isLoading || isAiThinking}
