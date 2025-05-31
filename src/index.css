@@ -1,0 +1,235 @@
+:root {
+  --bg-color: #e0e0e0; /* Light grey background */
+  --text-color: #333;
+  --primary-color: #5c67f2; /* A subtle primary color for highlights */
+  --shadow-light: #ffffff;
+  --shadow-dark: #bebebe;
+  --neumorphic-pressed-intensity: 0.08; /* How deep the press looks */
+  --font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 900px;
+  padding: 20px;
+}
+
+/* Neumorphic Base Element Styling */
+.neumorphic {
+  background: var(--bg-color);
+  border-radius: 20px;
+  box-shadow:
+    9px 9px 18px var(--shadow-dark),
+    -9px -9px 18px var(--shadow-light);
+  transition: all 0.3s ease-in-out;
+}
+
+.neumorphic-inset {
+  background: var(--bg-color);
+  border-radius: 15px; /* Slightly smaller radius for inset */
+  box-shadow:
+    inset 7px 7px 14px var(--shadow-dark),
+    inset -7px -7px 14px var(--shadow-light);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Button Styling */
+.neumorphic-button {
+  padding: 15px 25px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--text-color);
+  margin: 10px;
+  /* composes: neumorphic; */ /* No composes in plain CSS, apply directly */
+  background: var(--bg-color);
+  border-radius: 20px;
+  box-shadow:
+    9px 9px 18px var(--shadow-dark),
+    -9px -9px 18px var(--shadow-light);
+}
+
+.neumorphic-button:hover {
+  box-shadow:
+    5px 5px 10px var(--shadow-dark),
+    -5px -5px 10px var(--shadow-light);
+}
+
+.neumorphic-button:active {
+  /* composes: neumorphic-inset; */ /* No composes in plain CSS, apply directly */
+  background: var(--bg-color);
+  border-radius: 20px;
+  box-shadow:
+    inset 7px 7px 14px var(--shadow-dark),
+    inset -7px -7px 14px var(--shadow-light);
+  color: var(--primary-color);
+}
+
+.neumorphic-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none; /* Flat when disabled */
+}
+
+/* Input and Textarea Styling */
+.neumorphic-input,
+.neumorphic-textarea {
+  width: calc(100% - 40px); /* Adjust for padding */
+  padding: 15px 20px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  margin-bottom: 20px;
+  /* composes: neumorphic-inset; */
+  background: var(--bg-color);
+  border-radius: 15px;
+  box-shadow:
+    inset 7px 7px 14px var(--shadow-dark),
+    inset -7px -7px 14px var(--shadow-light);
+}
+
+.neumorphic-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Select Styling */
+.neumorphic-select-container {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+  /* composes: neumorphic; */
+  background: var(--bg-color);
+  border-radius: 20px;
+  box-shadow:
+    9px 9px 18px var(--shadow-dark),
+    -9px -9px 18px var(--shadow-light);
+}
+
+.neumorphic-select {
+  padding: 15px 40px 15px 20px; /* Space for arrow */
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--text-color);
+  background: transparent; /* Important */
+  appearance: none; /* Remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  min-width: 200px;
+}
+
+.neumorphic-select-container::after { /* Custom arrow */
+  content: '▼';
+  font-size: 0.8rem;
+  color: var(--text-color);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* So it doesn't interfere with select click */
+}
+
+
+/* Card Styling */
+.neumorphic-card {
+  padding: 25px;
+  margin-bottom: 30px;
+  /* composes: neumorphic; */
+  background: var(--bg-color);
+  border-radius: 20px;
+  box-shadow:
+    9px 9px 18px var(--shadow-dark),
+    -9px -9px 18px var(--shadow-light);
+}
+
+.neumorphic-card h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.neumorphic-card h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* Output Area */
+.output-area {
+  margin-top: 20px;
+  padding: 20px;
+  min-height: 80px;
+  white-space: pre-wrap; /* Preserve line breaks */
+  word-wrap: break-word;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  /* composes: neumorphic-inset; */
+  background: var(--bg-color);
+  border-radius: 15px;
+  box-shadow:
+    inset 7px 7px 14px var(--shadow-dark),
+    inset -7px -7px 14px var(--shadow-light);
+}
+
+/* App Structure */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.app-header {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  /* composes: neumorphic; */
+  background: var(--bg-color);
+  border-radius: 20px;
+  box-shadow:
+    9px 9px 18px var(--shadow-dark),
+    -9px -9px 18px var(--shadow-light);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-shadow: 1px 1px 1px var(--shadow-light), -1px -1px 1px var(--shadow-dark);
+}
+
+.loading-indicator {
+  font-style: italic;
+  color: var(--primary-color);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
