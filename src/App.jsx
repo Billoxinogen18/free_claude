@@ -4,21 +4,21 @@ import './index.css';
 
 const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
 
-// Updated model groups based on your provided snippet
+// Corrected model groups - based on your originally provided Puter.js docs & recent additions
 const modelGroups = [
   {
     label: "Claude",
     models: [
       { value: 'claude-sonnet-4', label: 'Claude Sonnet 4' },
       { value: 'claude-opus-4', label: 'Claude Opus 4' },
-      { value: 'claude-3-5-sonnet', label: 'Claude 3.5 Sonnet' }, // Added
+      { value: 'claude-3-5-sonnet', label: 'Claude 3.5 Sonnet' },
     ]
   },
   {
     label: "OpenAI",
     models: [
       { value: 'gpt-4o', label: 'GPT-4o' },
-      { value: 'gpt-4o-mini', label: 'GPT-4o Mini' }, // Added
+      { value: 'gpt-4o-mini', label: 'GPT-4o Mini'},
       { value: 'gpt-4.1', label: 'GPT-4.1' },
       { value: 'gpt-4.5-preview', label: 'GPT-4.5 Preview' },
       { value: 'o1', label: 'OpenAI o1' },
@@ -30,22 +30,21 @@ const modelGroups = [
   {
     label: "Grok",
     models: [
-      // Note: Using 'grok-beta' as per your snippet. Original Puter.js docs showed 'x-ai/grok-3-beta'.
-      // Ensure 'grok-beta' is the correct identifier if issues arise.
-      { value: 'grok-beta', label: 'Grok Beta' }, 
+      { value: 'x-ai/grok-3-beta', label: 'Grok 3 Beta' }, // Using documented name
     ]
   },
   {
     label: "Gemini",
     models: [
-      // Using simplified names as per your snippet.
-      { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
+      { value: 'google/gemini-2.5-pro-exp-03-25:free', label: 'Gemini 2.5 Pro' },
+      { value: 'google/gemini-pro', label: 'Gemini Pro'},
       { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
+      { value: 'google/gemini-flash-1.5-8b', label: 'Gemini Flash 1.5 8B'},
+      { value: 'google/gemini-2.0-flash-lite-001', label: 'Gemini 2.0 Flash Lite' },
     ]
   }
 ];
 
-// Simple Markdown to HTML (bold, italic, inline code)
 const SimpleMarkdown = ({ text }) => {
   if (!text) return null;
   const html = text
@@ -58,7 +57,7 @@ const SimpleMarkdown = ({ text }) => {
 function App() {
   const [puter, setPuter] = useState(null);
   const [currentPrompt, setCurrentPrompt] = useState('');
-  const [selectedModel, setSelectedModel] = useState(modelGroups[0].models[0].value); // Default to first model in the list
+  const [selectedModel, setSelectedModel] = useState(modelGroups[0].models[0].value);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false); 
   const [isAiThinking, setIsAiThinking] = useState(false); 
@@ -69,6 +68,8 @@ function App() {
   const textareaRef = useRef(null);
   const chatAreaRef = useRef(null);
   const headerRef = useRef(null);
+  const footerRef = useRef(null);
+
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('cool-chat-theme');
@@ -103,28 +104,31 @@ function App() {
   }, [messages, isAiThinking, showScrollToBottom]);
 
   useEffect(() => {
-    if (headerRef.current) {
-      const headerHeight = headerRef.current.offsetHeight;
-      document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
-    }
-    const resizeObserver = new ResizeObserver(entries => {
-        for (let entry of entries) {
-            if (entry.target === headerRef.current) {
-                 const headerHeight = entry.contentRect.height;
-                 document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
-            }
-        }
-    });
-    const currentHeaderRef = headerRef.current; // Capture value for cleanup
-    if(currentHeaderRef) {
-        resizeObserver.observe(currentHeaderRef);
-    }
+    const updateCssVariables = () => {
+      if (headerRef.current) {
+        const headerHeight = headerRef.current.offsetHeight;
+        document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+      }
+      if (footerRef.current) {
+        const footerHeight = footerRef.current.offsetHeight;
+        document.documentElement.style.setProperty('--footer-height', `${footerHeight}px`);
+      }
+    };
+
+    updateCssVariables(); // Initial call
+
+    const resizeObserver = new ResizeObserver(updateCssVariables);
+    const currentHeaderRef = headerRef.current;
+    const currentFooterRef = footerRef.current;
+
+    if(currentHeaderRef) resizeObserver.observe(currentHeaderRef);
+    if(currentFooterRef) resizeObserver.observe(currentFooterRef);
+
     return () => {
-        if(currentHeaderRef) {
-            resizeObserver.unobserve(currentHeaderRef);
-        }
+        if(currentHeaderRef) resizeObserver.unobserve(currentHeaderRef);
+        if(currentFooterRef) resizeObserver.unobserve(currentFooterRef);
     }
-  }, [isDarkMode, headerRef]); // Removed headerRef.current from dep array, added headerRef
+  }, [isDarkMode, headerRef, footerRef]); // Dependencies that might affect height
 
   const handleChatScroll = () => {
     if (chatAreaRef.current) {
@@ -142,7 +146,7 @@ function App() {
 
   const toggleTheme = () => setIsDarkMode(prev => !prev);
 
-  // Using your updated handleSendMessage (streaming)
+  // Your updated handleSendMessage (streaming)
   const handleSendMessage = async (e) => {
     if (e) e.preventDefault(); 
     if (!puter || !currentPrompt.trim() || isLoading || isAiThinking) return;
@@ -173,8 +177,7 @@ function App() {
       let lastRenderTime = 0;
 
       for await (const part of responseStream) {
-        // Better handling of the response structure from your snippet
-        const textContent = part?.text || part?.content || '';
+        const textContent = part?.text || part?.content || ''; // From your snippet
         buffer += textContent;
         
         const currentTime = Date.now();
@@ -206,86 +209,20 @@ function App() {
       ));
 
     } catch (error) {
-      console.error(`Error with model ${selectedModel}:`, error);
+      console.error(`Error with model ${selectedModel}:`, error); // Log the actual error object
       setIsAiThinking(false);
       
-      // Better error message handling from your snippet
       let errorMessage = `Error with ${selectedModel}: `;
-      if (error.message) {
+      if (error && error.message) { // Check if error and error.message exist
         errorMessage += error.message;
       } else if (typeof error === 'string') {
         errorMessage += error;
       } else {
-        errorMessage += 'Unknown error occurred';
+        errorMessage += 'Unknown error occurred. Check console for details.';
       }
       
-      // Check if it's a model availability issue from your snippet
-      if (errorMessage.includes('undefined') || errorMessage.includes('not found') || errorMessage.includes('400')) {
-        errorMessage += '. This model might be unavailable or misconfigured. Try gpt-4o-mini or claude-3.5-sonnet.';
-      }
-      
-      setMessages(prev => prev.map(msg => 
-        msg.id === aiMessageId 
-          ? { ...msg, text: errorMessage, streaming: false, error: true } 
-          : msg
-      ));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Included your non-streaming version for potential testing/debugging
-  // To use it, you could temporarily call it in the form's onSubmit instead of handleSendMessage
-  // eslint-disable-next-line no-unused-vars
-  const handleSendMessageNonStream = async (e) => {
-    if (e) e.preventDefault(); 
-    if (!puter || !currentPrompt.trim() || isLoading || isAiThinking) return;
-
-    const userMessage = { id: generateId(), text: currentPrompt, sender: 'user', timestamp: new Date() };
-    setMessages(prev => [...prev, userMessage]);
-    const promptForAi = currentPrompt;
-    setCurrentPrompt('');
-    
-    setIsLoading(true);
-    setIsAiThinking(true);
-
-    const aiMessageId = generateId();
-    setMessages(prev => [...prev, { id: aiMessageId, text: '', sender: 'ai', streaming: false, modelUsed: selectedModel, timestamp: new Date() }]);
-    
-    try {
-      const response = await puter.ai.chat(promptForAi, { 
-        model: selectedModel, 
-        stream: false 
-      });
-      
-      setIsAiThinking(false);
-      
-      let responseText = '';
-      if (typeof response === 'string') {
-        responseText = response;
-      } else if (response?.message?.content) {
-        responseText = response.message.content;
-      } else if (response?.text) {
-        responseText = response.text;
-      } else {
-        responseText = 'Received response but could not extract text content.';
-      }
-      
-      setMessages(prev => prev.map(msg => 
-        msg.id === aiMessageId 
-          ? { ...msg, text: responseText, streaming: false } 
-          : msg
-      ));
-
-    } catch (error) {
-      console.error(`Error with model ${selectedModel}:`, error);
-      setIsAiThinking(false);
-      
-      let errorMessage = `Error with ${selectedModel}: `;
-      if (error.message) {
-        errorMessage += error.message;
-      } else {
-        errorMessage += 'Unknown error occurred';
+      if (error && (String(error.message).includes('undefined') || String(error.message).includes('not found') || String(error.message).includes('400'))) {
+        errorMessage += ' This model might be unavailable, misconfigured, or the request was malformed. Try a different model like gpt-4o-mini or claude-3.5-sonnet.';
       }
       
       setMessages(prev => prev.map(msg => 
@@ -402,19 +339,18 @@ function App() {
             className={`scroll-to-bottom-button neumorphic-element ${showScrollToBottom ? 'visible' : ''}`} 
             aria-label="Scroll to bottom"
           >
-            {/* Updated SVG icon for scroll to bottom */}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 17.27L18.18 11.09L16.77 9.68L12 14.45L7.23 9.68L5.82 11.09L12 17.27ZM12 4C11.74 4 11.5 4.1 11.32 4.23L3.5 9.87C3.18 10.09 3 10.47 3 10.87V11C3 11.55 3.45 12 4 12H20C20.55 12 21 11.55 21 11V10.87C21 10.47 20.82 10.09 20.5 9.87L12.68 4.23C12.5 4.1 12.26 4 12 4Z"/></svg>
           </button>
         )}
       </main>
 
-      <footer className="chat-input-area glassmorphic-element">
+      <footer className="chat-input-area glassmorphic-element" ref={footerRef}>
         <form onSubmit={handleSendMessage} className="input-form">
           <textarea
             ref={textareaRef} 
             className="chat-input" 
             value={currentPrompt}
-            onChange={(e) => { setCurrentPrompt(e.target.value); /* autoResizeTextarea called by useEffect */}}
+            onChange={(e) => setCurrentPrompt(e.target.value) } // autoResizeTextarea is called by useEffect on currentPrompt change
             placeholder="Message Cool Chat..." 
             rows="1" 
             disabled={isLoading || isAiThinking}
