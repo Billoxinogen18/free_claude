@@ -1,11 +1,25 @@
+/* src/index.css */
 :root {
-  --bg-color: #e0e0e0; /* Light grey background */
-  --text-color: #333;
-  --primary-color: #5c67f2; /* A subtle primary color for highlights */
-  --shadow-light: #ffffff;
-  --shadow-dark: #bebebe;
-  --neumorphic-pressed-intensity: 0.08; /* How deep the press looks */
+  --bg-color: #e0e5ec; /* Slightly bluer tint for a more modern feel */
+  --text-color: #3a3a3a;
+  --primary-color: #6d5dfc;
+  --secondary-color: #8981f7;
+  --accent-color: #ff708b; /* For highlights or errors */
+
+  /* Neumorphic Shadows */
+  --shadow-light: rgba(255, 255, 255, 0.7);
+  --shadow-dark: rgba(163, 177, 198, 0.6);
+  --neumorphic-distance: 7px;
+  --neumorphic-blur: 15px;
+
+  /* Glassmorphism */
+  --glass-bg-color: rgba(255, 255, 255, 0.35); /* Semi-transparent white */
+  --glass-blur: 10px;
+  --glass-border-color: rgba(255, 255, 255, 0.5);
+
   --font-family: 'Poppins', sans-serif;
+  --border-radius-main: 20px;
+  --border-radius-small: 12px;
 }
 
 body {
@@ -13,223 +27,338 @@ body {
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-color);
+  background: linear-gradient(120deg, #f6d365 0%, #fda085 100%); /* Engaging background */
   color: var(--text-color);
   display: flex;
   justify-content: center;
-  padding-top: 40px;
+  align-items: center; /* Center the app vertically */
   min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 #root {
   width: 100%;
-  max-width: 900px;
-  padding: 20px;
+  max-width: 700px; /* Optimized for chat */
+  height: clamp(80vh, 90vh, 650px); /* Responsive height */
 }
 
-/* Neumorphic Base Element Styling */
-.neumorphic {
-  background: var(--bg-color);
-  border-radius: 20px;
-  box-shadow:
-    9px 9px 18px var(--shadow-dark),
-    -9px -9px 18px var(--shadow-light);
-  transition: all 0.3s ease-in-out;
-}
-
-.neumorphic-inset {
-  background: var(--bg-color);
-  border-radius: 15px; /* Slightly smaller radius for inset */
-  box-shadow:
-    inset 7px 7px 14px var(--shadow-dark),
-    inset -7px -7px 14px var(--shadow-light);
-  transition: all 0.3s ease-in-out;
-}
-
-/* Button Styling */
-.neumorphic-button {
-  padding: 15px 25px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 1rem;
-  color: var(--text-color);
-  margin: 10px;
-  /* composes: neumorphic; */ /* No composes in plain CSS, apply directly */
-  background: var(--bg-color);
-  border-radius: 20px;
-  box-shadow:
-    9px 9px 18px var(--shadow-dark),
-    -9px -9px 18px var(--shadow-light);
-}
-
-.neumorphic-button:hover {
-  box-shadow:
-    5px 5px 10px var(--shadow-dark),
-    -5px -5px 10px var(--shadow-light);
-}
-
-.neumorphic-button:active {
-  /* composes: neumorphic-inset; */ /* No composes in plain CSS, apply directly */
-  background: var(--bg-color);
-  border-radius: 20px;
-  box-shadow:
-    inset 7px 7px 14px var(--shadow-dark),
-    inset -7px -7px 14px var(--shadow-light);
-  color: var(--primary-color);
-}
-
-.neumorphic-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  box-shadow: none; /* Flat when disabled */
-}
-
-/* Input and Textarea Styling */
-.neumorphic-input,
-.neumorphic-textarea {
-  width: calc(100% - 40px); /* Adjust for padding */
-  padding: 15px 20px;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  font-family: var(--font-family);
-  color: var(--text-color);
-  margin-bottom: 20px;
-  /* composes: neumorphic-inset; */
-  background: var(--bg-color);
-  border-radius: 15px;
-  box-shadow:
-    inset 7px 7px 14px var(--shadow-dark),
-    inset -7px -7px 14px var(--shadow-light);
-}
-
-.neumorphic-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Select Styling */
-.neumorphic-select-container {
-  position: relative;
-  display: inline-block;
-  margin: 10px;
-  /* composes: neumorphic; */
-  background: var(--bg-color);
-  border-radius: 20px;
-  box-shadow:
-    9px 9px 18px var(--shadow-dark),
-    -9px -9px 18px var(--shadow-light);
-}
-
-.neumorphic-select {
-  padding: 15px 40px 15px 20px; /* Space for arrow */
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 1rem;
-  color: var(--text-color);
-  background: transparent; /* Important */
-  appearance: none; /* Remove default arrow */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 100%;
-  min-width: 200px;
-}
-
-.neumorphic-select-container::after { /* Custom arrow */
-  content: '▼';
-  font-size: 0.8rem;
-  color: var(--text-color);
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none; /* So it doesn't interfere with select click */
-}
-
-
-/* Card Styling */
-.neumorphic-card {
+.app-container.cool-chat-theme {
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius-main);
+  box-shadow: 
+    var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--shadow-dark),
+    calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--shadow-light);
   padding: 25px;
-  margin-bottom: 30px;
-  /* composes: neumorphic; */
-  background: var(--bg-color);
-  border-radius: 20px;
-  box-shadow:
-    9px 9px 18px var(--shadow-dark),
-    -9px -9px 18px var(--shadow-light);
-}
-
-.neumorphic-card h2 {
-  margin-top: 0;
-  color: var(--primary-color);
-  font-weight: 600;
-}
-
-.neumorphic-card h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: var(--text-color);
-  font-weight: 500;
-}
-
-/* Output Area */
-.output-area {
-  margin-top: 20px;
-  padding: 20px;
-  min-height: 80px;
-  white-space: pre-wrap; /* Preserve line breaks */
-  word-wrap: break-word;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  /* composes: neumorphic-inset; */
-  background: var(--bg-color);
-  border-radius: 15px;
-  box-shadow:
-    inset 7px 7px 14px var(--shadow-dark),
-    inset -7px -7px 14px var(--shadow-light);
-}
-
-/* App Structure */
-.app-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  height: 100%;
+  overflow: hidden; /* Prevent content spill */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Header */
 .app-header {
-  text-align: center;
-  padding: 20px;
+  padding: 15px 20px;
   margin-bottom: 20px;
-  /* composes: neumorphic; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: var(--bg-color);
-  border-radius: 20px;
-  box-shadow:
-    9px 9px 18px var(--shadow-dark),
-    -9px -9px 18px var(--shadow-light);
+  border-radius: var(--border-radius-main);
+  box-shadow: 
+    var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--shadow-dark),
+    calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--shadow-light);
 }
 
 .app-header h1 {
   margin: 0;
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: var(--primary-color);
-  text-shadow: 1px 1px 1px var(--shadow-light), -1px -1px 1px var(--shadow-dark);
+  text-shadow: 1px 1px 1px var(--shadow-light);
 }
 
-.loading-indicator {
-  font-style: italic;
-  color: var(--primary-color);
+.model-selector-container {
+  padding: 5px; /* Smaller padding for inset */
+  border-radius: var(--border-radius-small);
+  background: var(--bg-color);
+   box-shadow: 
+    inset calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-dark),
+    inset calc(-1 * var(--neumorphic-distance) / 2) calc(-1 * var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-light);
 }
 
-.controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+.neumorphic-select {
+  padding: 10px 30px 10px 15px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: var(--border-radius-small); /* Match container */
+}
+
+.model-selector-container::after {
+  content: '▼';
+  font-size: 0.7rem;
+  color: var(--text-color);
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Chat Area */
+.chat-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 10px 10px 10px; /* Padding for scrollbar and content */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between messages */
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary-color) var(--bg-color);
+}
+
+.chat-area::-webkit-scrollbar {
+  width: 8px;
+}
+.chat-area::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  border-radius: 10px;
+}
+.chat-area::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+  border: 2px solid var(--bg-color);
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Space between message bubbles */
+}
+
+.message-bubble {
+  padding: 12px 18px;
+  border-radius: var(--border-radius-main);
+  max-width: 75%;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  box-shadow: 3px 3px 7px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.message-bubble p {
+  margin: 0;
+}
+
+.user-message {
+  background: var(--primary-color);
+  color: white;
+  align-self: flex-end;
+  border-top-right-radius: var(--border-radius-small); /* Chat bubble tail effect */
+  animation: slideInRight 0.3s ease-out;
+}
+
+.ai-message {
+  background: var(--glass-bg-color); /* Glassmorphism */
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border-color);
+  color: var(--text-color);
+  align-self: flex-start;
+  border-top-left-radius: var(--border-radius-small); /* Chat bubble tail effect */
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.error-message {
+  background-color: var(--accent-color);
+  color: white;
+  border: 1px solid var(--accent-color);
+}
+
+.streaming-cursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Chat Input Area */
+.chat-input-area {
+  padding-top: 15px; /* Space above input */
+  border-top: 1px solid var(--shadow-dark); /* Subtle separator */
+}
+
+.input-form {
+  display: flex;
+  align-items: flex-end; /* Align button with bottom of textarea */
+  gap: 10px;
+}
+
+.chat-input.neumorphic-textarea {
+  flex-grow: 1;
+  border-radius: var(--border-radius-small);
+  padding: 12px 18px;
+  min-height: 48px; /* Initial height for approx 2 rows */
+  max-height: 120px; /* Limit expansion */
+  resize: none; /* Disable manual resize, use auto-sizing */
+  background: var(--bg-color);
+   box-shadow: 
+    inset calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-dark),
+    inset calc(-1 * var(--neumorphic-distance) / 2) calc(-1 * var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-light);
+  transition: box-shadow 0.2s ease-in-out;
+}
+.chat-input.neumorphic-textarea:focus {
+  box-shadow: 
+    inset calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-dark),
+    inset calc(-1 * var(--neumorphic-distance) / 2) calc(-1 * var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-light),
+    0 0 0 2px var(--primary-color); /* Focus ring */
+}
+
+
+.send-button.neumorphic-button {
+  padding: 0; /* Remove padding for SVG icon */
+  width: 48px; /* Square button */
+  height: 48px;
+  border-radius: var(--border-radius-small);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-color);
+  box-shadow: 
+    calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-dark),
+    calc(-1 * var(--neumorphic-distance) / 2) calc(-1 * var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-light);
+  transition: all 0.2s ease-in-out;
+}
+.send-button.neumorphic-button svg {
+  fill: var(--primary-color);
+  transition: transform 0.2s ease;
+}
+.send-button.neumorphic-button:hover svg {
+  transform: scale(1.1);
+}
+.send-button.neumorphic-button:active {
+   box-shadow: 
+    inset calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-dark),
+    inset calc(-1 * var(--neumorphic-distance) / 2) calc(-1 * var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--shadow-light);
+}
+.send-button.neumorphic-button:active svg {
+  transform: scale(0.9);
+}
+.send-button.neumorphic-button:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+}
+.send-button.neumorphic-button:disabled svg {
+  fill: var(--text-color);
+}
+
+/* Typing Indicator for loading state in button */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  margin: 0 2px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: typingAnimation 1.2s infinite ease-in-out;
+}
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingAnimation {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+
+/* Initial Loading Spinner */
+.initial-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px; /* Or adjust as needed */
+  width: 100%;
+  max-width: 400px;
+  margin: auto; /* Center it on the page */
+  padding: 30px;
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius-main);
+   box-shadow: 
+    var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--shadow-dark),
+    calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--shadow-light);
+}
+
+.initial-loading-container p {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--shadow-dark);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Animations for messages */
+@keyframes slideInLeft {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  #root {
+    height: 95vh; /* More height on smaller screens */
+    padding: 10px;
+  }
+  .app-container.cool-chat-theme {
+    padding: 15px;
+  }
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+  .message-bubble {
+    max-width: 85%;
+    font-size: 0.9rem;
+  }
+  .chat-input.neumorphic-textarea {
+    padding: 10px 15px;
+  }
+  .send-button.neumorphic-button {
+    width: 44px;
+    height: 44px;
+  }
 }
