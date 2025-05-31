@@ -1,54 +1,60 @@
 /* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
   --font-family: 'Poppins', sans-serif;
-  --transition-speed: 0.3s;
-  --border-radius-main: 20px;
-  --border-radius-medium: 16px;
+  --transition-speed-fast: 0.2s;
+  --transition-speed-medium: 0.35s; /* Slightly faster for snappier feel */
+  --transition-speed-slow: 0.5s;
+  --border-radius-main: 24px; /* More pronounced rounding */
+  --border-radius-medium: 18px;
   --border-radius-small: 12px;
 
-  /* Light Mode Variables */
-  --lm-bg-start: #e6e7ee;
-  --lm-bg-end: #d1d9e6;
-  --lm-text-primary: #3a3a3a;
-  --lm-text-secondary: #5b5b5b;
-  --lm-primary-accent: #6d5dfc;
-  --lm-secondary-accent: #8981f7;
-  --lm-error-accent: #ff708b;
+  /* Light Mode Variables - Using the gradient you liked */
+  --lm-bg-gradient: linear-gradient(135deg, #e6e7ee 0%, #d1d9e6 100%);
+  --lm-text-primary: #2a2f47;
+  --lm-text-secondary: #5f6784;
+  --lm-primary-accent: #6457f3; /* Slightly more vibrant purple */
+  --lm-secondary-accent: #8379f7;
+  --lm-error-accent: #ff5a79;
 
-  --lm-neumorphic-shadow-light: rgba(255, 255, 255, 0.8);
-  --lm-neumorphic-shadow-dark: rgba(163, 177, 198, 0.7);
+  --lm-neumorphic-shadow-light: rgba(255, 255, 255, 0.95); /* Brighter light shadow */
+  --lm-neumorphic-shadow-dark: rgba(163, 174, 192, 0.65); /* Slightly deeper dark shadow */
   --lm-neumorphic-distance: 6px;
-  --lm-neumorphic-blur: 12px;
+  --lm-neumorphic-blur: 16px; /* Softer blur */
 
-  --lm-glass-bg: rgba(255, 255, 255, 0.45);
-  --lm-glass-border: rgba(255, 255, 255, 0.6);
-  --lm-glass-blur-amount: 8px;
+  --lm-glass-bg: rgba(245, 245, 250, 0.6); /* Lighter, cleaner glass */
+  --lm-glass-border: rgba(255, 255, 255, 0.8);
+  --lm-glass-blur-amount: 10px;
+  --lm-glass-glow: 0 0 20px rgba(150, 150, 220, 0.2); /* Subtle cool glow */
+  --lm-bg-for-neumorph: #e9eef5; /* Base for neumorphic gradients to pop */
 
-  /* Dark Mode Variables */
-  --dm-bg-start: #2c2f3c;
-  --dm-bg-end: #1e2028;
-  --dm-text-primary: #e0e0e0;
-  --dm-text-secondary: #b0b0b0;
-  --dm-primary-accent: #7f70ff;
-  --dm-secondary-accent: #9d92fc;
-  --dm-error-accent: #ff8097;
 
-  --dm-neumorphic-shadow-light: rgba(60, 60, 75, 0.7); /* Darker context, so light shadow is less white */
-  --dm-neumorphic-shadow-dark: rgba(0, 0, 0, 0.4);
+  /* Dark Mode Variables - Using the gradient you liked */
+  --dm-bg-gradient: linear-gradient(135deg, #2c2f3c 0%, #1e2028 100%);
+  --dm-text-primary: #e8eaf6;
+  --dm-text-secondary: #c0c5e0;
+  --dm-primary-accent: #8272ff; /* Brighter purple for dark mode */
+  --dm-secondary-accent: #9f93fe;
+  --dm-error-accent: #ff8a9f;
+
+  --dm-neumorphic-shadow-light: rgba(80, 85, 105, 0.7);
+  --dm-neumorphic-shadow-dark: rgba(5, 6, 10, 0.55); /* Deeper dark shadow */
   --dm-neumorphic-distance: 6px;
-  --dm-neumorphic-blur: 12px;
+  --dm-neumorphic-blur: 16px;
 
-  --dm-glass-bg: rgba(40, 42, 53, 0.55); /* Darker glass */
-  --dm-glass-border: rgba(70, 70, 90, 0.5);
-  --dm-glass-blur-amount: 10px;
+  --dm-glass-bg: rgba(35, 38, 56, 0.65); /* Darker, more defined glass */
+  --dm-glass-border: rgba(100, 105, 130, 0.5);
+  --dm-glass-blur-amount: 12px;
+  --dm-glass-glow: 0 0 25px rgba(100, 90, 200, 0.3); /* More noticeable glow */
+  --dm-bg-for-neumorph: #252833;
 }
 
-/* Apply Light Mode by default */
+/* Default to Light Mode variables, overridden by .dark-mode */
 body {
-  background: linear-gradient(135deg, var(--lm-bg-start), var(--lm-bg-end));
+  background: var(--lm-bg-gradient);
   color: var(--lm-text-primary);
-  --current-bg-start: var(--lm-bg-start);
-  --current-bg-end: var(--lm-bg-end);
+
   --current-text-primary: var(--lm-text-primary);
   --current-text-secondary: var(--lm-text-secondary);
   --current-primary-accent: var(--lm-primary-accent);
@@ -59,14 +65,14 @@ body {
   --current-glass-bg: var(--lm-glass-bg);
   --current-glass-border: var(--lm-glass-border);
   --current-glass-blur-amount: var(--lm-glass-blur-amount);
+  --current-glass-glow: var(--lm-glass-glow);
+  --current-bg-for-neumorph: var(--lm-bg-for-neumorph);
 }
 
-/* Dark Mode Styles */
 body.dark-mode {
-  background: linear-gradient(135deg, var(--dm-bg-start), var(--dm-bg-end));
+  background: var(--dm-bg-gradient);
   color: var(--dm-text-primary);
-  --current-bg-start: var(--dm-bg-start);
-  --current-bg-end: var(--dm-bg-end);
+
   --current-text-primary: var(--dm-text-primary);
   --current-text-secondary: var(--dm-text-secondary);
   --current-primary-accent: var(--dm-primary-accent);
@@ -77,413 +83,302 @@ body.dark-mode {
   --current-glass-bg: var(--dm-glass-bg);
   --current-glass-border: var(--dm-glass-border);
   --current-glass-blur-amount: var(--dm-glass-blur-amount);
+  --current-glass-glow: var(--dm-glass-glow);
+  --current-bg-for-neumorph: var(--dm-bg-for-neumorph);
 }
 
-body {
-  margin: 0;
-  font-family: var(--font-family);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  width: 100vw;
-  overflow: hidden; /* Prevent scrollbars on body itself */
-  transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+/* General body and root setup */
+body, html {
+  margin: 0; padding: 0; width: 100vw; height: 100vh;
+  overflow: hidden; font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  transition: background var(--transition-speed-medium) ease, color var(--transition-speed-medium) ease;
 }
 
 #root {
-  width: 100%;
-  height: 100%;
-  display: flex; /* Ensure #root also flexes for App to take full height */
-  justify-content: center;
-  align-items: center;
+  width: 100%; height: 100%; display: flex;
+  justify-content: center; align-items: center;
+  padding: clamp(10px, 2vw, 20px); /* Responsive padding around app */
+  box-sizing: border-box;
 }
 
 .app-container.cool-chat-theme {
-  width: clamp(350px, 95vw, 750px); /* Responsive width */
-  height: clamp(400px, 90vh, 800px); /* Responsive height */
-  background-color: transparent; /* App container is now a layout guide, not visually distinct */
-  border-radius: 0; /* No border radius for the main app container if it's full page */
-  box-shadow: none; /* No shadow for the main app container if it's full page */
-  padding: 0; /* No padding if it's a full-page conceptual container */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative; /* For absolutely positioned elements like theme toggle */
+  width: 100%; height: 100%;
+  max-width: 850px; /* Slightly wider for a more spacious feel */
+  max-height: 950px;
+  display: flex; flex-direction: column; overflow: hidden; position: relative;
+  /* Main app panel with refined glassmorphism */
+  background: var(--current-glass-bg);
+  backdrop-filter: blur(calc(var(--current-glass-blur-amount) + 8px)); /* More blur for main panel */
+  -webkit-backdrop-filter: blur(calc(var(--current-glass-blur-amount) + 8px));
+  border: 1.5px solid var(--current-glass-border); /* Thicker border */
+  border-radius: var(--border-radius-main);
+  box-shadow: var(--current-glass-glow), 0 12px 60px rgba(0,0,0,0.2); /* Stronger shadow */
+  padding: clamp(15px, 3vw, 25px);
+  box-sizing: border-box;
 }
 
-/* Neumorphic Element Base */
+/* Neumorphic Element Base - "Crazier" with stronger interaction */
 .neumorphic-element {
-  background: linear-gradient(145deg, color-mix(in srgb, var(--current-bg-start) 90%, var(--current-neumorphic-shadow-light) 10%), color-mix(in srgb, var(--current-bg-end) 90%, var(--current-neumorphic-shadow-dark) 10%));
+  background: var(--current-bg-for-neumorph);
   border-radius: var(--border-radius-medium);
   box-shadow: 
-    var(--lm-neumorphic-distance) var(--lm-neumorphic-distance) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-dark),
-    calc(-1 * var(--lm-neumorphic-distance)) calc(-1 * var(--lm-neumorphic-distance)) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-light);
-  transition: box-shadow var(--transition-speed) ease, background var(--transition-speed) ease;
+    var(--dm-neumorphic-distance) var(--dm-neumorphic-distance) var(--dm-neumorphic-blur) var(--current-neumorphic-shadow-dark),
+    calc(-1 * var(--dm-neumorphic-distance)) calc(-1 * var(--dm-neumorphic-distance)) var(--dm-neumorphic-blur) var(--current-neumorphic-shadow-light);
+  transition: all var(--transition-speed-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Snappier transition */
 }
-
-.neumorphic-element-inset {
-  background: var(--current-bg-start); /* Match background for inset */
-  border-radius: var(--border-radius-medium);
+.neumorphic-element:hover:not(:disabled) {
+   box-shadow: 
+    calc(var(--dm-neumorphic-distance) * 1.5) calc(var(--dm-neumorphic-distance) * 1.5) calc(var(--dm-neumorphic-blur) * 1.5) var(--current-neumorphic-shadow-dark),
+    calc(-1 * var(--dm-neumorphic-distance) * 1.5) calc(-1 * var(--dm-neumorphic-distance) * 1.5) calc(var(--dm-neumorphic-blur) * 1.5) var(--current-neumorphic-shadow-light),
+    0 0 0 3px color-mix(in srgb, var(--current-primary-accent) 20%, transparent); /* More visible glow */
+   transform: translateY(-2px); /* Slight lift */
+}
+.neumorphic-element:active:not(:disabled) {
   box-shadow: 
-    inset var(--lm-neumorphic-distance) var(--lm-neumorphic-distance) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-dark),
-    inset calc(-1 * var(--lm-neumorphic-distance)) calc(-1 * var(--lm-neumorphic-distance)) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-light);
-  transition: box-shadow var(--transition-speed) ease, background var(--transition-speed) ease;
+    inset var(--dm-neumorphic-distance) var(--dm-neumorphic-distance) var(--dm-neumorphic-blur) var(--current-neumorphic-shadow-dark),
+    inset calc(-1 * var(--dm-neumorphic-distance)) calc(-1 * var(--dm-neumorphic-distance)) var(--dm-neumorphic-blur) var(--current-neumorphic-shadow-light);
+  transform: translateY(1px) scale(0.96); /* Deeper press */
 }
 
-/* Glassmorphic Element Base */
+/* Glassmorphic Element Base - More refined */
 .glassmorphic-element {
   background: var(--current-glass-bg);
   backdrop-filter: blur(var(--current-glass-blur-amount));
   -webkit-backdrop-filter: blur(var(--current-glass-blur-amount));
   border: 1px solid var(--current-glass-border);
   border-radius: var(--border-radius-medium);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow for glass */
-  transition: background var(--transition-speed) ease, border var(--transition-speed) ease;
+  box-shadow: var(--current-glass-glow), 0 5px 25px rgba(0, 0, 0, 0.08); /* Softer, more diffused shadow */
+  transition: all var(--transition-speed-medium) ease;
+}
+.glassmorphic-element:hover {
+  box-shadow: var(--current-glass-glow), 0 8px 35px rgba(0,0,0,0.12);
+  background: color-mix(in srgb, var(--current-glass-bg) 85%, var(--current-primary-accent) 8%); /* Stronger tint */
+  transform: translateY(-1px);
 }
 
-
-/* Header */
+/* Header - Adjusted for toggle spacing */
 .app-header {
-  padding: 20px 25px;
-  margin: 20px 20px 15px 20px; /* Add margins to detach from edges */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* Combine Neumorphic and Glassmorphic for header */
-  background: var(--current-glass-bg);
-  backdrop-filter: blur(var(--current-glass-blur-amount));
-  -webkit-backdrop-filter: blur(var(--current-glass-blur-amount));
-  border: 1px solid var(--current-glass-border);
-  border-radius: var(--border-radius-main);
-   box-shadow: 
-    var(--lm-neumorphic-distance) var(--lm-neumorphic-distance) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-dark),
-    calc(-1 * var(--lm-neumorphic-distance)) calc(-1 * var(--lm-neumorphic-distance)) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-light),
-    0 8px 32px 0 rgba(31, 38, 135, 0.17); /* Softer overall shadow for glass */
+  padding: 10px 0; 
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; position: relative;
 }
-
-.app-header h1 {
-  margin: 0;
-  font-size: 1.6rem;
-  font-weight: 700;
+.header-title-area h1 {
+  margin: 0; font-size: clamp(1.6rem, 4vw, 2rem); font-weight: 700;
   color: var(--current-primary-accent);
-  text-shadow: 1px 1px 2px var(--current-neumorphic-shadow-dark);
+  text-shadow: 1px 1px 3px color-mix(in srgb, var(--current-neumorphic-shadow-dark) 40%, transparent);
 }
+.header-controls-area { display: flex; align-items: center; gap: 18px; /* Increased gap */ }
 
-.model-selector-container { /* Will apply .neumorphic-element-inset or .glassmorphic-element */
-  padding: 8px;
-  border-radius: var(--border-radius-small);
+.model-selector-container { /* Is .glassmorphic-element */
+  padding: 6px; border-radius: var(--border-radius-small);
 }
+.neumorphic-select {
+  padding: 10px 35px 10px 15px; border: none; outline: none; cursor: pointer;
+  font-weight: 500; font-size: 0.9rem; color: var(--current-text-secondary);
+  background: transparent; appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  width: 100%; min-width: 200px; 
+  transition: color var(--transition-speed-medium) ease;
+}
+.model-selector-container::after { /* Arrow for select */
+  content: '▼'; font-size: 0.8rem; color: var(--current-text-secondary);
+  position: absolute; right: 15px; top: 50%;
+  transform: translateY(-50%); pointer-events: none;
+  transition: color var(--transition-speed-medium) ease, transform var(--transition-speed-fast) ease;
+}
+.model-selector-container:hover::after { transform: translateY(-50%) scale(1.1); }
 
-.neumorphic-select { /* The select tag itself */
-  padding: 10px 35px 10px 15px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 0.9rem;
+.theme-toggle-button { /* Is .neumorphic-element */
+  width: 48px; height: 48px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;  /* Larger icon */
   color: var(--current-text-secondary);
-  background: transparent; /* Crucial for inset/glass effect */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 100%;
-  transition: color var(--transition-speed) ease;
+  padding:0; 
+  position: relative; /* Keep it in flow if header-controls-area handles spacing well */
 }
-
-.model-selector-container::after { /* Custom arrow for the select */
-  content: '▼';
-  font-size: 0.8rem;
-  color: var(--current-text-secondary);
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  transition: color var(--transition-speed) ease;
-}
-
-/* Theme Toggle Button */
-.theme-toggle-button {
-  position: absolute;
-  top: 30px; /* Adjust based on header height */
-  right: 35px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem; /* Icon size */
-  color: var(--current-text-secondary);
-  /* Apply neumorphic styling */
-  background: linear-gradient(145deg, color-mix(in srgb, var(--current-bg-start) 90%, var(--current-neumorphic-shadow-light) 10%), color-mix(in srgb, var(--current-bg-end) 90%, var(--current-neumorphic-shadow-dark) 10%));
-  box-shadow: 
-    3px 3px 6px var(--current-neumorphic-shadow-dark),
-    -3px -3px 6px var(--current-neumorphic-shadow-light);
-  transition: all var(--transition-speed) ease;
-  z-index: 100;
-}
-.theme-toggle-button:hover {
-  color: var(--current-primary-accent);
-  box-shadow: 
-    4px 4px 8px var(--current-neumorphic-shadow-dark),
-    -4px -4px 8px var(--current-neumorphic-shadow-light);
-}
-.theme-toggle-button:active {
-  box-shadow: 
-    inset 3px 3px 6px var(--current-neumorphic-shadow-dark),
-    inset -3px -3px 6px var(--current-neumorphic-shadow-light);
-}
+.theme-toggle-button:hover { color: var(--current-primary-accent); }
 
 
-/* Chat Area */
+/* Chat Area & Messages - "Crazier" animations and styling */
 .chat-area {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 10px 25px 20px 25px; /* More horizontal padding */
-  display: flex;
-  flex-direction: column;
-  gap: 18px; /* Increased space between messages */
-  scrollbar-width: thin;
-  scrollbar-color: var(--current-secondary-accent) transparent; /* Make track transparent */
+  flex-grow: 1; overflow-y: auto;
+  padding: 15px 10px 20px 10px; display: flex; flex-direction: column;
+  scrollbar-width: thin; scrollbar-color: var(--current-secondary-accent) transparent;
 }
-
-.chat-area::-webkit-scrollbar { width: 6px; }
-.chat-area::-webkit-scrollbar-track { background: transparent; } /* Transparent track */
+.chat-area::-webkit-scrollbar { width: 8px; }
+.chat-area::-webkit-scrollbar-track { background: transparent; }
 .chat-area::-webkit-scrollbar-thumb {
   background-color: var(--current-secondary-accent);
   border-radius: 10px;
+  border: 2px solid transparent; /* Match body bg if possible, else transparent */
 }
+.message-list { display: flex; flex-direction: column; gap: 22px; margin-top: auto; padding: 0 15px; }
 
-.message-list {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-top: auto; /* Pushes messages to bottom if not enough to fill */
+.message-wrapper { display: flex; /* Base for animation */ }
+.user-wrapper { justify-content: flex-end; animation: slideInSmoothRight 0.5s var(--transition-speed-medium) cubic-bezier(0.165, 0.84, 0.44, 1) both; }
+.ai-wrapper { justify-content: flex-start; animation: slideInSmoothLeft 0.5s var(--transition-speed-medium) cubic-bezier(0.165, 0.84, 0.44, 1) both; }
+
+/* Stagger message appearance */
+.message-wrapper:nth-child(odd) { animation-delay: 0.1s; }
+.message-wrapper:nth-child(even) { animation-delay: 0.2s; }
+
+
+@keyframes slideInSmoothLeft {
+  0% { opacity: 0; transform: translateX(-40px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes slideInSmoothRight {
+  0% { opacity: 0; transform: translateX(40px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 .message-bubble {
-  padding: 14px 20px;
-  border-radius: var(--border-radius-medium);
-  max-width: 78%;
-  word-wrap: break-word;
-  line-height: 1.55;
-  font-size: 0.98rem;
-  position: relative; /* For potential pseudo-elements or animations */
-  transition: transform 0.2s ease-out, box-shadow var(--transition-speed) ease;
+  padding: 15px 22px; border-radius: var(--border-radius-medium);
+  max-width: 82%; word-wrap: break-word;
+  line-height: 1.65; font-size: 1rem; position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Softer base shadow for all bubbles */
 }
+.message-bubble p { margin: 0; white-space: pre-wrap; }
 
-.message-bubble p { margin: 0; }
-
-.user-message {
-  /* Neumorphic raised effect for user messages */
-  background: linear-gradient(145deg, var(--current-primary-accent), color-mix(in srgb, var(--current-primary-accent) 80%, black 20%));
-  color: white;
-  align-self: flex-end;
+.user-message { /* More distinct Neumorphic Extrusion */
+  background: linear-gradient(150deg, var(--current-primary-accent), color-mix(in srgb, var(--current-primary-accent) 75%, #000 25%));
+  color: #f5f5fa;
   border-top-right-radius: var(--border-radius-small);
-  animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-bottom-left-radius: var(--border-radius-main);
+  border-bottom-right-radius: var(--border-radius-main);
   box-shadow: 
-    var(--lm-neumorphic-distance) var(--lm-neumorphic-distance) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-dark),
-    calc(-1 * var(--lm-neumorphic-distance)) calc(-1 * var(--lm-neumorphic-distance)) var(--lm-neumorphic-blur) var(--current-neumorphic-shadow-light);
+    var(--dm-neumorphic-distance) var(--dm-neumorphic-distance) calc(var(--dm-neumorphic-blur) * 1.2) color-mix(in srgb, var(--current-neumorphic-shadow-dark) 80%, transparent),
+    calc(-1 * var(--dm-neumorphic-distance)) calc(-1 * var(--dm-neumorphic-distance)) calc(var(--dm-neumorphic-blur) * 1.2) color-mix(in srgb, var(--current-neumorphic-shadow-light) 80%, transparent),
+    inset 1px 1px 2px rgba(255,255,255,0.2), /* Inner highlight */
+    inset -1px -1px 2px rgba(0,0,0,0.1); /* Inner shadow */
 }
 
-.ai-message {
-  /* Glassmorphic effect for AI messages */
-  background: var(--current-glass-bg);
-  backdrop-filter: blur(var(--current-glass-blur-amount));
-  -webkit-backdrop-filter: blur(var(--current-glass-blur-amount));
-  border: 1px solid var(--current-glass-border);
+.ai-message { /* "Crazier" Glassmorphism */
+  background: color-mix(in srgb, var(--current-glass-bg) 80%, transparent 20%); /* More transparent */
+  backdrop-filter: blur(calc(var(--current-glass-blur-amount) + 4px)); /* Even more blur */
+  -webkit-backdrop-filter: blur(calc(var(--current-glass-blur-amount) + 4px));
+  border: 1.5px solid color-mix(in srgb, var(--current-glass-border) 70%, transparent 30%); /* Softer border */
   color: var(--current-text-primary);
-  align-self: flex-start;
   border-top-left-radius: var(--border-radius-small);
-  animation: slideInLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 5px 25px rgba(0,0,0,0.08); /* Softer shadow for glass */
+  border-bottom-left-radius: var(--border-radius-main);
+  border-bottom-right-radius: var(--border-radius-main);
+  box-shadow: var(--current-glass-glow), 0 8px 40px rgba(0,0,0,0.12); /* More pronounced glow/shadow */
 }
+.error-message { /* ... existing error styles ... */ }
 
-.error-message {
-  background-color: var(--current-error-accent);
-  color: white;
-  border-color: color-mix(in srgb, var(--current-error-accent) 70%, black 30%);
+.copy-button { /* Neumorphic, tiny, appears on hover */
+  position: absolute; bottom: 5px; right: 5px;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0; transform: scale(0.8);
+  transition: all var(--transition-speed-fast) ease-out;
+  padding:0; border: none;
+  /* Inherits neumorphic from .neumorphic-element via App.jsx */
 }
+.ai-message:hover .copy-button { opacity: 0.7; transform: scale(1); }
+.copy-button:hover { opacity: 1; transform: scale(1.1)!important; } /* Important to override active */
+.copy-button svg { fill: var(--current-text-secondary); }
+.ai-message .copy-button svg { fill: var(--current-text-primary); }
 
-.streaming-cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background-color: var(--current-text-primary);
-  animation: blink 1s infinite;
-  margin-left: 3px;
-  vertical-align: text-bottom;
+/* Streaming & Thinking Indicators - More "Crazy" */
+.streaming-cursor { /* Animated gradient cursor */
+  display: inline-block; width: 3px; height: 1.1em;
+  margin-left: 4px; vertical-align: text-bottom;
+  background: linear-gradient(135deg, var(--current-primary-accent), var(--current-secondary-accent), var(--current-primary-accent));
+  background-size: 100% 300%;
+  animation: blinkGradient 1.2s infinite, gradientFlow 3s linear infinite;
 }
-body.dark-mode .ai-message .streaming-cursor {
-  background-color: var(--current-text-primary); /* Ensure visibility in dark mode AI bubble */
-}
-body:not(.dark-mode) .user-message .streaming-cursor {
-  background-color: white; /* Ensure visibility in light mode user bubble */
-}
+@keyframes blinkGradient { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+@keyframes gradientFlow { 0% { background-position: 0% 0%; } 100% { background-position: 0% 300%; } }
 
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+.pulsing-loader { /* AI is thinking message content */
+  display: flex; align-items: center; justify-content: center;
+  height: 24px; /* Match typical line height */
 }
-
-/* Chat Input Area - Glassmorphic with Neumorphic Send Button */
-.chat-input-area {
-  padding: 20px 25px 25px 25px; /* More padding */
-  margin: 15px 20px 20px 20px; /* Margins to detach from edges */
-  /* Glassmorphic input area */
-  background: var(--current-glass-bg);
-  backdrop-filter: blur(var(--current-glass-blur-amount));
-  -webkit-backdrop-filter: blur(var(--current-glass-blur-amount));
-  border: 1px solid var(--current-glass-border);
-  border-radius: var(--border-radius-main);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+.pulsing-loader div {
+  width: 8px; height: 8px; margin: 0 3px;
+  background-color: var(--current-text-secondary); /* Adjusted for AI bubble */
+  border-radius: 50%;
+  animation: pulseDotLarge 1.5s infinite cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
 }
+.ai-message.thinking-message .pulsing-loader div { background-color: var(--current-text-primary); }
 
-.input-form {
-  display: flex;
-  align-items: flex-end;
-  gap: 15px;
-}
+.pulsing-loader div:nth-child(1) { animation-delay: 0s; }
+.pulsing-loader div:nth-child(2) { animation-delay: 0.2s; }
+.pulsing-loader div:nth-child(3) { animation-delay: 0.4s; }
 
-.chat-input { /* The textarea itself, no more .neumorphic-textarea class directly here */
-  flex-grow: 1;
-  border-radius: var(--border-radius-medium);
-  padding: 15px 20px;
-  min-height: 50px; 
-  max-height: 150px;
-  resize: none; 
-  font-size: 1rem;
-  color: var(--current-text-primary);
-  background: transparent; /* Essential for glass effect */
-  border: none; /* Remove default border */
-  outline: none; /* Remove default outline */
-  transition: all var(--transition-speed) ease;
-  line-height: 1.5;
+@keyframes pulseDotLarge {
+  0%, 100% { transform: scale(0.5); opacity: 0.4; }
+  50% { transform: scale(1.1); opacity: 1; }
 }
-.chat-input::placeholder {
-  color: var(--current-text-secondary);
-  opacity: 0.8;
-}
-
-/* Overriding ugly borders from browser/extensions for the textarea */
-textarea.chat-input, textarea.chat-input:focus {
-  border: none !important; /* Force no border */
-  box-shadow: none !important; /* Force no default browser focus shadow if it conflicts */
-  outline: none !important; /* Force no outline */
+.typing-indicator span { /* Send button loading - uses pulseDotLarge animation */
+   background-color: var(--current-primary-accent);
+   animation-name: pulseDotLarge; /* Use the new animation */
+   width: 6px; height: 6px; margin: 0 2px; /* Adjust size if needed */
 }
 
 
-.send-button { /* The button, apply .neumorphic-element class */
-  width: 50px;
-  height: 50px;
-  border-radius: var(--border-radius-medium);
-  border: none; /* Remove default border */
-  outline: none; /* Remove default outline */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-speed) ease;
+/* Chat Input Area - "Crazier" Glass */
+.chat-input-area { /* Is .glassmorphic-element */
+  padding: 18px 22px; margin-top: 20px;
+  border-radius: var(--border-radius-main); 
+  backdrop-filter: blur(calc(var(--current-glass-blur-amount) + 6px));
+  -webkit-backdrop-filter: blur(calc(var(--current-glass-blur-amount) + 6px));
+  border-width: 1.5px; /* Thicker border for definition */
+  box-shadow: var(--current-glass-glow), 0 10px 50px rgba(0,0,0,0.2); /* Enhanced shadow */
+}
+.input-form { display: flex; align-items: flex-end; gap: 15px; }
+
+.chat-input {
+  flex-grow: 1; border-radius: var(--border-radius-medium);
+  padding: 15px 20px; min-height: 52px; max-height: 140px;
+  resize: none; font-size: 1rem; color: var(--current-text-primary);
+  background: transparent; border: none; outline: none;
+  line-height: 1.6;
+  transition: all var(--transition-speed-medium) ease;
+}
+.chat-input::placeholder { color: var(--current-text-secondary); opacity: 0.6; }
+
+.send-button { /* Is .neumorphic-element */
+  width: 52px; height: 52px; border-radius: var(--border-radius-medium);
+  border: none; outline: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding:0;
 }
 .send-button svg {
-  fill: var(--current-primary-accent);
-  width: 24px;
-  height: 24px;
-  transition: transform 0.2s ease, fill var(--transition-speed) ease;
+  fill: var(--current-primary-accent); width: 24px; height: 24px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), fill var(--transition-speed-medium) ease; /* Bouncy transition */
 }
-.send-button:hover svg {
-  transform: scale(1.15) rotate(5deg);
-}
-.send-button:active { /* Apply inset effect */
-  transform: scale(0.95);
-   box-shadow: 
-    inset calc(var(--lm-neumorphic-distance)/1.5) calc(var(--lm-neumorphic-distance)/1.5) calc(var(--lm-neumorphic-blur)/1.5) var(--current-neumorphic-shadow-dark),
-    inset calc(-1 * var(--lm-neumorphic-distance)/1.5) calc(-1 * var(--lm-neumorphic-distance)/1.5) calc(var(--lm-neumorphic-blur)/1.5) var(--current-neumorphic-shadow-light) !important; /* Override .neumorphic-element base */
-}
-.send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.send-button:disabled svg {
-  fill: var(--current-text-secondary);
-}
+.send-button:hover:not(:disabled) svg { transform: scale(1.2) rotate(15deg); }
+.send-button:disabled { opacity: 0.5; transform: scale(1); }
 
-/* Typing Indicator in send button */
-.typing-indicator { display: flex; align-items: center; justify-content: center; height: 100%; }
-.typing-indicator span {
-  width: 5px; height: 5px; margin: 0 1.5px;
-  background-color: var(--current-primary-accent);
-  border-radius: 50%; opacity: 0.3;
-  animation: typingAnimation 1.2s infinite ease-in-out;
-  transition: background-color var(--transition-speed) ease;
-}
-.typing-indicator span:nth-child(1) { animation-delay: 0s; }
-.typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
 
-@keyframes typingAnimation {
-  0%, 100% { opacity: 0.3; transform: translateY(0px); }
-  50% { opacity: 1; transform: translateY(-3px); }
+/* Initial Loading Spinner - More Integrated */
+.initial-loading-container { /* Styles already make it glassmorphic */
+  padding: 40px; border-radius: var(--border-radius-main); z-index: 1000;
 }
-
-/* Initial Loading Spinner */
-.initial-loading-container {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  position: absolute; /* Center on page */
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 40px;
-  border-radius: var(--border-radius-main);
-  /* Applying glassmorphic effect to the loader box itself */
-  background: var(--current-glass-bg);
-  backdrop-filter: blur(var(--current-glass-blur-amount));
-  -webkit-backdrop-filter: blur(var(--current-glass-blur-amount));
-  border: 1px solid var(--current-glass-border);
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.1);
-}
-.initial-loading-container p { margin-top: 25px; font-size: 1.1rem; color: var(--current-text-primary); }
+.initial-loading-container p { margin-top: 25px; font-size: 1.1rem; color: var(--current-text-primary); font-weight: 500; }
 .spinner {
-  width: 55px; height: 55px;
-  border: 6px solid var(--current-neumorphic-shadow-dark);
+  width: 60px; height: 60px; border: 6px solid transparent;
   border-top-color: var(--current-primary-accent);
+  border-right-color: var(--current-primary-accent); /* Two-tone spin */
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  transition: border-color var(--transition-speed) ease;
+  animation: spin 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045) infinite; /* More interesting easing */
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Animations for messages */
-@keyframes slideInLeft {
-  from { transform: translateX(-30px) scale(0.95); opacity: 0; }
-  to { transform: translateX(0) scale(1); opacity: 1; }
-}
-@keyframes slideInRight {
-  from { transform: translateX(30px) scale(0.95); opacity: 0; }
-  to { transform: translateX(0) scale(1); opacity: 1; }
-}
-
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .app-container.cool-chat-theme {
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
-    margin: 0;
+@media (max-width: 600px) {
+  .app-container.cool-chat-theme { padding: 10px 5px; } /* Less padding on smallest screens */
+  .header-title-area h1 { font-size: 1.4rem; }
+  .header-controls-area { flex-direction: column; align-items: flex-end; gap: 10px; }
+  .model-selector-container { width: 100%; }
+  .neumorphic-select { font-size: 0.85rem; }
+  .theme-toggle-button { /* Ensure it's accessible */
+    position: static; /* Let flexbox handle it */
+    align-self: flex-end;
   }
-  .app-header, .chat-input-area {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-  .theme-toggle-button {
-    top: 28px;
-    right: 20px;
-  }
-  .chat-area { padding-left: 15px; padding-right: 15px; }
+  .chat-area { padding: 10px 0px; }
+  .message-list { padding: 0 8px; }
+  .chat-input-area { padding: 12px 15px; margin: 10px; }
+  .send-button { width: 48px; height: 48px; }
 }
