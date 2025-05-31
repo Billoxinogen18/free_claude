@@ -2,16 +2,38 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './index.css'; // Styles will be significantly updated
 
-// Simple unique ID generator for messages
 const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
 
 function App() {
   const [puter, setPuter] = useState(null);
   const [currentPrompt, setCurrentPrompt] = useState('');
-  const [chatModel, setChatModel] = useState('claude-sonnet-4'); // Default model
-  const [messages, setMessages] = useState([]); // Stores { id, text, sender: 'user' | 'ai', streaming?: boolean }
+  const [chatModel, setChatModel] = useState('claude-sonnet-4');
+  const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const chatEndRef = useRef(null); // To auto-scroll to the latest message
+  const [isDarkMode, setIsDarkMode] = useState(false); // State for dark mode
+  const chatEndRef = useRef(null);
+
+  // Load theme preference from local storage or default to system preference
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cool-chat-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      setIsDarkMode(prefersDark);
+    }
+  }, []);
+
+  // Apply theme to body and save preference
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('cool-chat-theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('cool-chat-theme', 'light');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     if (window.puter) {
@@ -28,9 +50,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Scroll to bottom when messages change
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const toggleTheme = () => {
+    setIsDarkMode(prevMode => !prevMode);
+  };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -38,16 +63,16 @@ function App() {
 
     const userMessage = { id: generateId(), text: currentPrompt, sender: 'user' };
     setMessages(prev => [...prev, userMessage]);
+    const promptForClaude = currentPrompt; // Capture prompt before clearing
     setCurrentPrompt('');
     setIsLoading(true);
 
     const aiMessageId = generateId();
-    // Add a placeholder for the AI's response while streaming
     setMessages(prev => [...prev, { id: aiMessageId, text: '', sender: 'ai', streaming: true }]);
 
     try {
       const responseStream = await puter.ai.chat(
-        userMessage.text, // Send the text from the user message
+        promptForClaude,
         { model: chatModel, stream: true }
       );
 
@@ -61,7 +86,6 @@ function App() {
           )
         );
       }
-      // Mark streaming as complete for this message
       setMessages(prev =>
         prev.map(msg =>
           msg.id === aiMessageId ? { ...msg, streaming: false } : msg
@@ -80,9 +104,9 @@ function App() {
     }
   };
 
-  if (!puter && !isLoading) { // Show initial loading for PuterJS only if not already in a chat loading state
+  if (!puter && !isLoading) {
     return (
-      <div className="initial-loading-container neumorphic-card">
+      <div className="initial-loading-container"> {/* Removed neumorphic-card, style directly */}
         <div className="spinner"></div>
         <p>Initializing Cool Chat...</p>
       </div>
@@ -90,12 +114,16 @@ function App() {
   }
 
   return (
-    <div className="app-container cool-chat-theme">
-      <header className="app-header neumorphic">
+    <div className="app-container cool-chat-theme"> {/* Ensure this class is on the main container */}
+      <button onClick={toggleTheme} className="theme-toggle-button" aria-label="Toggle theme">
+        {isDarkMode ? '☀️' : '🌙'}
+      </button>
+      
+      <header className="app-header"> {/* Removed neumorphic, class .app-header styles it */}
         <h1>Cool Chat</h1>
-        <div className="model-selector-container neumorphic-inset">
+        <div className="model-selector-container glassmorphic-element"> {/* Applied glassmorphic */}
           <select
-            className="neumorphic-select"
+            className="neumorphic-select" // This class is mostly for text and internal structure now
             value={chatModel}
             onChange={(e) => setChatModel(e.target.value)}
             disabled={isLoading}
@@ -113,31 +141,36 @@ function App() {
               key={msg.id}
               className={`message-bubble ${msg.sender === 'user' ? 'user-message' : 'ai-message'} ${msg.error ? 'error-message' : ''}`}
             >
-              <p>{msg.text}{msg.streaming && <span className="streaming-cursor">▍</span>}</p>
+              <p>{msg.text}{msg.streaming && <span className="streaming-cursor"></span>}</p>
             </div>
           ))}
-          <div ref={chatEndRef} /> {/* For auto-scrolling */}
+          <div ref={chatEndRef} />
         </div>
       </main>
 
-      <footer className="chat-input-area">
+      <footer className="chat-input-area"> {/* chat-input-area will be styled as glassmorphic */}
         <form onSubmit={handleSendMessage} className="input-form">
           <textarea
-            className="neumorphic-textarea chat-input"
+            className="chat-input" // Removed neumorphic-textarea, styled by .chat-input
             value={currentPrompt}
             onChange={(e) => setCurrentPrompt(e.target.value)}
-            placeholder="Type your message..."
-            rows="2"
+            placeholder="Message Cool Chat..."
+            rows="1" // Start with 1 row, CSS will handle min/max height and growth
             disabled={isLoading}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
                 handleSendMessage(e);
               }
             }}
+            style={{height: 'auto', overflowY: 'hidden'}} // For auto-resizing
+            onInput={(e) => { // Auto-resize textarea
+              e.target.style.height = 'auto';
+              e.target.style.height = (e.target.scrollHeight) + 'px';
+            }}
           />
           <button
             type="submit"
-            className="neumorphic-button send-button"
+            className="send-button neumorphic-element" // Applied neumorphic
             disabled={isLoading || !currentPrompt.trim()}
           >
             {isLoading ? (
@@ -145,7 +178,7 @@ function App() {
                 <span></span><span></span><span></span>
               </div>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M3.40039 20.5996L20.9996 12.9996L3.40039 5.39961L3.40039 10.9996L14.4004 12.9996L3.40039 14.9996L3.40039 20.5996Z"/></svg>
             )}
           </button>
         </form>
